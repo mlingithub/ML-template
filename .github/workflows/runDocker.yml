@@ -4,8 +4,8 @@ on:
   push:
     paths: 
       - "Dockerfile"
-    branches:
-      - '!deploy'
+    #branches:
+    #  - '!deploy'
 
 jobs:
   build:
@@ -43,7 +43,8 @@ jobs:
                 docker build --tag $branch .
                 docker run -v ~/Desktop/$repo_folder:/app -p 5000:5000 $branch
                 git add . >/dev/null 2>/dev/null
-                message=$(git log --oneline --pretty=format:%s --max-count=1 -- main.py)
+                #message=$(git log --oneline --pretty=format:%s --max-count=1 -- main.py)
+                message=$GITHUB_SHA
                 git commit -m "$message" >/dev/null 2>/dev/null
                 git push --force https://github.com/$GITHUB_REPOSITORY.git $branch >/dev/null 2>/dev/null
                 # /data/anaconda/envs/py35/bin/python3 .github/experiment.py $GITHUB_SHA $branch $wiki_folder
