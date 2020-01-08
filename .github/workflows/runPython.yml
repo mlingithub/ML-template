@@ -26,6 +26,17 @@ jobs:
                 repo_folder=${GITHUB_REPOSITORY##*/}
                 branch=${GITHUB_REF##*/}
                 cd Desktop
+                wiki_folder="${GITHUB_REPOSITORY##*/}.wiki"
+                if [ ! -d $wiki_folder ] ; then
+                    git clone https://github.com/"$GITHUB_REPOSITORY.wiki".git 2>/dev/null
+                    cd $wiki_folder
+                    git checkout master 2>/dev/null
+                else
+                    cd $wiki_folder
+                    git checkout master >/dev/null 2>/dev/null
+                    git pull --all >/dev/null 2>/dev/null
+                fi
+                cd ..
                 if [ ! -d $repo_folder ] ; then
                     git clone https://github.com/$GITHUB_REPOSITORY.git >/dev/null 2>/dev/null
                     cd $repo_folder
@@ -39,18 +50,6 @@ jobs:
                     git submodule update --init --recursive >/dev/null 2>/dev/null
                     git lfs pull >/dev/null 2>/dev/null
                 fi
-                cd ..
-                wiki_folder="${GITHUB_REPOSITORY##*/}.wiki"
-                if [ ! -d $wiki_folder ] ; then
-                    git clone https://github.com/"$GITHUB_REPOSITORY.wiki".git 2>/dev/null
-                    cd $wiki_folder
-                    git checkout master 2>/dev/null
-                else
-                    cd $wiki_folder
-                    git checkout master >/dev/null 2>/dev/null
-                    git pull --all >/dev/null 2>/dev/null
-                fi
-                cd ../$repo_folder
                 /data/anaconda/envs/py36/bin/python3 main.py
                 git add . >/dev/null 2>/dev/null
                 message=$(git log --oneline --pretty=format:%s --max-count=1 -- main.py)
