@@ -1,4 +1,0 @@
-
-[submodule ".data/Data-Titanic"]
-	path = .data/Data-Titanic
-	url = https://github.com/ahdbilal/Data-Titanic.git
